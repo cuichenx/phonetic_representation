@@ -1,0 +1,9 @@
+epitran
+panphon
+# TODO: convert panphon to panphon2
+panphon2
+tqdm
+# transformers - use conda
+wandb
+torch
+sklearn
