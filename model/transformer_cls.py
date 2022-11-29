@@ -9,6 +9,8 @@ class CLSPooler(nn.Module):
         # TODO: pass the masking if needed
         encoder_layer = nn.TransformerEncoderLayer(d_model=input_dim, nhead=num_heads, dim_feedforward=hidden_dim, batch_first=True)
         self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+        self.linear = nn.Linear(input_dim, input_dim)
+        self.activation = nn.ReLU()
 
     def forward(self, tokens, feature_array):
         # prepend [CLS] token to each sequence
@@ -21,4 +23,5 @@ class CLSPooler(nn.Module):
         # TODO: do we need token embeddings?
 
         # extract output corresponding to [CLS] token
-        return encoded_input[:, 0]
+        pooled_output = encoded_input[:, 0]
+        return self.activation(self.linear(pooled_output))
