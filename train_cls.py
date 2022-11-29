@@ -33,7 +33,10 @@ def train_step(model, train_loader, optimizer, limit_iter_per_epoch=None):
         target = data['feature_edit_dist']
 
         # TODO: why are pooled_word_1 and pooled_word_2 of different lengths
-        model_output = torch.cosine_similarity(pooled_word_1, pooled_word_2)
+        # model_output = torch.cosine_similarity(pooled_word_1, pooled_word_2)
+
+        # TODO: toggle between cosine and L2 norm
+        model_output = torch.nn.PairwiseDistance(p=2)(pooled_word_1, pooled_word_2)
         loss = mse(model_output, target)
 
         optimizer.zero_grad()
