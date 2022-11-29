@@ -122,6 +122,7 @@ def train(args, vocab, model):
     evaluator = IntrinsicEvaluator()
     # d['ipa'] returns transcriptions for a pair of words
     evaluator.set_phon_feats([transcription for d in val_dset for transcription in d['ipa']])
+    best_intrinsic = -1e10
 
     for ep in range(args.epochs):
         t = time.time()
@@ -130,6 +131,9 @@ def train(args, vocab, model):
                                      limit_iter_per_epoch=args.limit_iter_per_epoch)
         train_time = time.time()
         val_loss_dict = validate_step(model, val_loader, evaluator)
+
+        best_intrinsic = max(best_intrinsic, val_loss_dict["val/intrinsic_spearman_correlation"])
+        val_loss_dict["val/BEST_intrinsic_spearman_correlation"] = best_intrinsic
 
         wandb.log({"train/lr": optimizer.param_groups[0]['lr'], **train_loss_dict, **val_loss_dict})
 
