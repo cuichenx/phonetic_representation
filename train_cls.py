@@ -161,6 +161,7 @@ def parse_args():
     parser.add_argument('--num_layers', help='number of Transformer encoder layers', type=int, default=4)
     parser.add_argument('--num_attention_heads', type=int, default=4)
     parser.add_argument('--hidden_dim', type=int, default=100)
+    parser.add_argument('--dropout', type=float, default=0.30)
     parser.add_argument('--epochs', type=int, default=300)
     parser.add_argument('--warmup_epochs', type=int, default=10)
     parser.add_argument('--batch_size', type=int, default=1)
@@ -183,7 +184,8 @@ if __name__ == '__main__':
     model = CLSPooler(num_layers=args.num_layers,
                       input_dim=24,  # TODO: verify input dim
                       num_heads=args.num_attention_heads,
-                      hidden_dim=args.hidden_dim).to(device)
+                      hidden_dim=args.hidden_dim,
+                      dropout=args.dropout).to(device)
 
     train(args, ipa_vocab, model)
 

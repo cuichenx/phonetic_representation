@@ -3,11 +3,11 @@ from torch import nn
 
 
 class CLSPooler(nn.Module):
-    def __init__(self, num_layers, input_dim, num_heads, hidden_dim):
+    def __init__(self, num_layers, input_dim, num_heads, hidden_dim, dropout):
         super().__init__()
         # TODO: are we sure we don't need embeddings?
         # TODO: pass the masking if needed
-        encoder_layer = nn.TransformerEncoderLayer(d_model=input_dim, nhead=num_heads, dim_feedforward=hidden_dim, batch_first=True)
+        encoder_layer = nn.TransformerEncoderLayer(d_model=input_dim, nhead=num_heads, dim_feedforward=hidden_dim, batch_first=True, dropout=dropout)
         self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
         self.linear = nn.Linear(input_dim, input_dim)
         self.activation = nn.ReLU()
