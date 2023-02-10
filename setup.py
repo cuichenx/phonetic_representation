@@ -21,5 +21,6 @@ setup(
         "scipy>=1.7",
         "emoji>=2.2",
         'Levenshtein>=0.20.9',
+        'PyYAML>=6.0'
     ],
 )
