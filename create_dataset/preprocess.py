@@ -76,6 +76,7 @@ def process_non_en(lang, ortho_name, min_freq=6):
     epi = epitran.Epitran(ortho_name)
 
     tokens_all = []
+    code_switching = 0
     print('- converting to IPA')
     for token in tqdm.tqdm(frequent_tokens):
         if any(c in "0123456789" or is_emoji(c) for c in token):
@@ -84,6 +85,11 @@ def process_non_en(lang, ortho_name, min_freq=6):
         # doing ''.join(ipa_segs(s)) removes non-ipa characters from the string
         segments = ft.ipa_segs(epi.transliterate(token))
         if segments:
+            # codeswitching if original script is non-Latin and the output of Epitran is the same as the input
+            if ortho_name.split('-')[1] != 'Latn' and token.lower() == ''.join(segments):
+                code_switching += 1
+                continue
+
             vocab_ort.update(token)
             vocab_ipa.update(segments)
             token_ipa = ''.join(segments)
@@ -120,6 +126,7 @@ def process_non_en(lang, ortho_name, min_freq=6):
     ]
 
     save_lang(lang, tokens_all, vocab_ort, vocab_ipa)
+    print(f"removed {code_switching} instances of code switching, out of {len(frequent_tokens)} tokens")
 
     return vocab_ort, vocab_ipa
 
